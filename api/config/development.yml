@@ -1,0 +1,6 @@
+db:
+  url: "neo4j://localhost:7687"
+  user: "neo4j"
+  pass: "s3cr3t"
+server: 
+  port: ":8080"
