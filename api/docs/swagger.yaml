@@ -1,4 +1,20 @@
 basePath: /api/v1
+definitions:
+  models.Person:
+    properties:
+      birthday:
+        type: string
+      firstname:
+        type: string
+      fullname:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+      middlenames:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -13,17 +29,18 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /api/person/{id}:
-    get:
+  /person/:
+    post:
       consumes:
       - application/json
-      description: Returns 200 OK with "Working" when the server is running
+      description: Creates a Person
       parameters:
-      - description: Person ID
-        in: path
-        name: id
+      - description: Person
+        in: body
+        name: person
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/models.Person'
       produces:
       - application/json
       responses:
@@ -31,18 +48,30 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Webserver status
+      summary: Create Person
       tags:
       - person
-  /health:
+  /person/{id}:
     get:
-      description: Returns 200 OK with "Working" when the server is running
+      consumes:
+      - application/json
+      description: Gets Person by ID
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
           schema:
             type: string
-      summary: Webserver status
+      summary: Get Person
+      tags:
+      - person
 securityDefinitions:
   ApiKeyAuth:
     in: header

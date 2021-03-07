@@ -18,9 +18,9 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/api/person/{id}": {
-            "get": {
-                "description": "Returns 200 OK with \"Working\" when the server is running",
+        "/person/": {
+            "post": {
+                "description": "Creates a Person",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,10 +30,44 @@
                 "tags": [
                     "person"
                 ],
-                "summary": "Webserver status",
+                "summary": "Create Person",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "description": "Person",
+                        "name": "person",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/person/{id}": {
+            "get": {
+                "description": "Gets Person by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Get Person",
+                "parameters": [
+                    {
+                        "type": "string",
                         "description": "Person ID",
                         "name": "id",
                         "in": "path",
@@ -49,18 +83,29 @@
                     }
                 }
             }
-        },
-        "/health": {
-            "get": {
-                "description": "Returns 200 OK with \"Working\" when the server is running",
-                "summary": "Webserver status",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
+        }
+    },
+    "definitions": {
+        "models.Person": {
+            "type": "object",
+            "properties": {
+                "birthday": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "fullname": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "middlenames": {
+                    "type": "string"
                 }
             }
         }

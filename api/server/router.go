@@ -22,9 +22,9 @@ func NewRouter() *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//router.Use(middlewares.AuthMiddleware())
 
-	v1 := router.Group("api")
+	api := router.Group("api")
 	{
-		personGroup := v1.Group("person")
+		personGroup := api.Group("person")
 		{
 			user := new(controllers.PersonController)
 			personGroup.GET("/:id", user.Get)
@@ -44,7 +44,7 @@ func InitSwaggerInfo() {
 	docs.SwaggerInfo.Title = "Family Tree API"
 	docs.SwaggerInfo.Description = "API for connecting to database"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:8080"
-	docs.SwaggerInfo.BasePath = ""
+	docs.SwaggerInfo.Host = "localhost:8080/"
+	docs.SwaggerInfo.BasePath = "api"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 }

@@ -10,7 +10,7 @@ import (
 
 //Person model
 type Person struct {
-	ID          uint64    `json:"id" gorm:"primary_key"`
+	ID          string    `json:"id"`
 	FullName    string    `json:"fullname"`
 	FirstName   string    `json:"firstname"`
 	MiddleNames string    `json:"middlenames"`
@@ -18,12 +18,12 @@ type Person struct {
 	Birthday    time.Time `json:"birthday"`
 }
 
-func (p Person) GetByID(id uint64) (*Person, error) {
+func (p Person) GetByID(id string) (*Person, error) {
 	//do db call
-	driver := db.GetDB()
+	driver := db.GetDriver()
 	session := driver.NewSession(neo4j.SessionConfig{
 		AccessMode:   neo4j.AccessModeRead,
-		DatabaseName: "familytree",
+		DatabaseName: "ancestree",
 	})
 	defer session.Close()
 
@@ -32,6 +32,29 @@ func (p Person) GetByID(id uint64) (*Person, error) {
 			"MATCH (p:Person {id: $id}) RETURN p.name AS name, p.birthday AS birthday",
 			map[string]interface{}{
 				"id": id,
+			},
+		)
+	})
+
+	log.Println(result)
+
+	return nil, err
+}
+
+func (p Person) Create() (*Person, error) {
+	driver := db.GetDriver()
+	session := driver.NewSession(neo4j.SessionConfig{
+		AccessMode:   neo4j.AccessModeWrite,
+		DatabaseName: "ancestree",
+	})
+	defer session.Close()
+
+	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+		return tx.Run(
+			"CREATE (p:Person { id: apoc.create.uuid() name: $name, birthday: $birthday })",
+			map[string]interface{}{
+				"name":     p.FullName,
+				"birthday": p.Birthday,
 			},
 		)
 	})

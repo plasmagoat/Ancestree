@@ -7,7 +7,11 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
-var db neo4j.Driver
+type db struct {
+	driver neo4j.Driver
+}
+
+var instance *db
 
 func Init() {
 	c := config.GetConfig()
@@ -17,9 +21,14 @@ func Init() {
 		log.Fatal("error connecting to database")
 		panic(err)
 	}
-	db = driver
+
+	instance = &db{driver: driver}
 }
 
-func GetDB() neo4j.Driver {
-	return db
+func GetDriver() neo4j.Driver {
+	return instance.driver
+}
+
+func Close() {
+	instance.driver.Close()
 }

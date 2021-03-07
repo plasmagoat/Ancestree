@@ -1,11 +1,11 @@
 version: "3.2"
 services:
-  neo4j:
+  db:
     image: neo4j:latest
-    container_name: "neo4j-db"
+    container_name: "ancestree-db"
     volumes:
-      - "$HOME/neo4j/data:/data"
-      - "$HOME/neo4j/conf/:/conf/"
+      - "./database/data:/data"
+      - "./database/conf/:/conf/"
     ports:
       - 7474:7474
       - 7687:7687
@@ -15,8 +15,8 @@ services:
     networks:
       - neo4j_go_net
     command: neo4j
-  backend:
-    container_name: "go-api"
+  api:
+    container_name: "ancestree-api"
     build: "./api"
     ports:
       - "8080:8080"
@@ -24,13 +24,10 @@ services:
     volumes:
       - "./api:/go/src/app"
     depends_on:
-      - "neo4j"
+      - "db"
     networks:
       - neo4j_go_net
 
 networks:
   neo4j_go_net:
     driver: bridge
-
-volumes:
-  dgraph:

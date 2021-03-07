@@ -18,6 +18,7 @@ func main() {
 	flag.Parse()
 	config.Init(*environment)
 	db.Init()
+	defer db.Close()
 	server.Init()
 }
 
