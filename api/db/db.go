@@ -29,6 +29,12 @@ func GetDriver() neo4j.Driver {
 	return instance.driver
 }
 
+func GetNewSession() neo4j.Session {
+	return instance.driver.NewSession(neo4j.SessionConfig{
+		DatabaseName: "ancestree",
+	})
+}
+
 func Close() {
 	instance.driver.Close()
 }

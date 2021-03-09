@@ -28,3 +28,8 @@ Neo4j
   * link to full family tree
 * Full family tree view
   * Logged in people can edit the profile and add family members to their tree
+
+
+## Possible resourses
+
+* https://www.geni.com/

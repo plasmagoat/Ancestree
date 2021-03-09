@@ -28,8 +28,18 @@ func NewRouter() *gin.Engine {
 		{
 			user := new(controllers.PersonController)
 			personGroup.GET("/:id", user.Get)
+			personGroup.GET("/:id/parents", user.Get)
+			personGroup.GET("/:id/siblings", user.Get)
+			personGroup.GET("/:id/profile", user.Get)
 			personGroup.POST("/", user.Create)
+			personGroup.POST("/:id", user.CreateLink)
 		}
+		relationGroup := api.Group("relation")
+		{
+			relation := new(controllers.PersonController)
+			relationGroup.GET("/:id", relation.Get)
+		}
+
 	}
 
 	router.NoRoute(func(c *gin.Context) {

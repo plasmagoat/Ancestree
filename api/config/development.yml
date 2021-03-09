@@ -1,5 +1,5 @@
 db:
-  url: "bolt://localhost:7687"
+  url: "bolt://db:7687"
   user: "neo4j"
   pass: "s3cr3t"
 server: 

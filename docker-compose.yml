@@ -12,6 +12,7 @@ services:
     restart: on-failure
     environment:
       - NEO4J_AUTH=neo4j/s3cr3t
+      - NEO4JLABS_PLUGINS=["apoc"]
     networks:
       - neo4j_go_net
     command: neo4j

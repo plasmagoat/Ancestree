@@ -97,6 +97,45 @@ var doc = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Creates a Person",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Create Person link",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Person ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Person",
+                        "name": "person",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         }
     },
@@ -106,6 +145,9 @@ var doc = `{
             "properties": {
                 "birthday": {
                     "type": "string"
+                },
+                "father": {
+                    "$ref": "#/definitions/models.Person"
                 },
                 "firstname": {
                     "type": "string"
@@ -121,6 +163,9 @@ var doc = `{
                 },
                 "middlenames": {
                     "type": "string"
+                },
+                "mother": {
+                    "$ref": "#/definitions/models.Person"
                 }
             }
         }

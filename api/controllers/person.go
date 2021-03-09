@@ -60,3 +60,28 @@ func (p PersonController) Create(c *gin.Context) {
 	c.Abort()
 	return
 }
+
+// CreateLink godoc
+// @Summary Create Person link
+// @Description Creates a Person
+// @Tags person
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Person ID"
+// @Param person body models.Person true "Person"
+// @Success 200 {object} string
+// @Router /person/{id} [post]
+func (p PersonController) CreateLink(c *gin.Context) {
+	var newPerson models.Person
+	err := c.ShouldBindJSON(&newPerson)
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
+	}
+	gg, err := newPerson.LinkMother(c.Param("id"))
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request", "body": gg})
+	c.Abort()
+	return
+}
