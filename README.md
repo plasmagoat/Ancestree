@@ -17,8 +17,12 @@ Neo4j
 
 # TODO
 
-* [ ] Family tree database structure
-* [ ] CRUD queries in the backend
+* [X] Family tree database structure
+* [ ] CRUD queries in the backend and CQL database queries
+  * [X] CREATE (Person, Parent, Child, Link) 
+  * [X] READ (Person, Full-Tree, Thin-Tree) 
+  * [ ] UPDATE (Person, ?) 
+  * [ ] DELETE (Person, ?) 
 * [ ] frontend (using swagger for now)
 
 # Further ideas

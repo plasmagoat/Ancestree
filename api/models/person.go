@@ -10,19 +10,19 @@ import (
 
 //Person model
 type Person struct {
-	ID          string    `json:"id"`
-	FullName    string    `json:"fullname"`
-	FirstName   string    `json:"firstname"`
-	MiddleNames string    `json:"middlenames"`
-	LastName    string    `json:"lastname"`
-	Birthday    time.Time `json:"birthday"`
-	Gender      Gender    `json:"gender"`
+	ID       string    `json:"id"`
+	FullName string    `json:"fullname"`
+	Birthday time.Time `json:"birthday"`
+	Gender   Gender    `json:"gender"`
 }
 
+//Gender enum
 type Gender int
 
 const (
+	//Male gender
 	Male Gender = iota + 1
+	//Female gender
 	Female
 )
 

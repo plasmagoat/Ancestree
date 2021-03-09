@@ -77,7 +77,7 @@ func (p PersonController) CreateLink(c *gin.Context) {
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
 	}
-	gg, err := newPerson.LinkMother(c.Param("id"))
+	gg, err := newPerson.CreateParent(c.Param("id"))
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
 	}
