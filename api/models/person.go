@@ -2,6 +2,7 @@ package models
 
 import (
 	"api/db"
+	"encoding/json"
 	"log"
 	"time"
 
@@ -10,10 +11,12 @@ import (
 
 //Person model
 type Person struct {
-	ID       string    `json:"id"`
-	FullName string    `json:"fullname"`
-	Birthday time.Time `json:"birthday"`
-	Gender   Gender    `json:"gender"`
+	ID        string    `json:"id,omitempty" swaggerignore:"true"`
+	FullName  string    `json:"fullname"`
+	BirthName string    `json:"birthname"`
+	Birthday  time.Time `json:"birthday"`
+	Deathday  time.Time `json:"deathday"`
+	Gender    Gender    `json:"gender"`
 }
 
 //Gender enum
@@ -25,6 +28,19 @@ const (
 	//Female gender
 	Female
 )
+
+func (p *Person) getData() (map[string]interface{}, error) {
+	obj, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+	}
+	var personData map[string]interface{}
+	err = json.Unmarshal(obj, &personData)
+	if err != nil {
+		return nil, err
+	}
+	return personData, nil
+}
 
 func (p Person) GetByID(id string) (*Person, error) {
 	//do db call
@@ -50,19 +66,21 @@ func (p Person) GetByID(id string) (*Person, error) {
 }
 
 func (p Person) Create() (*Person, error) {
-	driver := db.GetDriver()
-	session := driver.NewSession(neo4j.SessionConfig{
-		AccessMode:   neo4j.AccessModeWrite,
-		DatabaseName: "ancestree",
-	})
+	personData, err := p.getData()
+	if err != nil {
+		return nil, err
+	}
+
+	session := db.GetNewSession()
 	defer session.Close()
 
 	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
 		return tx.Run(
-			"CREATE (p:Person { id: apoc.create.uuid(), name: $name, birthday: $birthday })",
+			`CREATE (p:Person { id: apoc.create.uuid() })
+			SET p += $personData
+			`,
 			map[string]interface{}{
-				"name":     p.FullName,
-				"birthday": p.Birthday,
+				"personData": personData,
 			},
 		)
 	})
@@ -73,72 +91,87 @@ func (p Person) Create() (*Person, error) {
 }
 
 func (p Person) CreateParent(childID string) (*Person, error) {
-	session := db.GetNewSession()
-	defer session.Close()
-
-	// first check if parent exists with the given gender...
-	hasParent, err := hasParent(session, childID, p.Gender)
-	if err != nil || hasParent {
+	personData, err := p.getData()
+	if err != nil {
 		return nil, err
 	}
-
-	// ... then if not create and link
-	// maybe make merge to make this function more usable
+	session := db.GetNewSession()
+	defer session.Close()
 
 	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
 		// maybe make merge to make this function more usable
 		return tx.Run(
-			`MATCH (c:Person { id:$childId})
-			CREATE (c)-[r:Parent]->(p:Person { 
-				id: apoc.create.uuid(), 
-				name: $name, 
-				birthday: $birthday,
-				gender: $gender,
-			})
+			`MATCH (c:Person { id: $childID })
+			WITH c
+			OPTIONAL MATCH (c)-[:Parent]->(q:Person {gender: $gender})
+			WITH q, c WHERE q IS NULL
+			CREATE (c)-[:Parent]->(p:Person { id: apoc.create.uuid() })
+			SET p += $personData
+			RETURN p
 			`,
-			// find a way to make this easier...
 			map[string]interface{}{
-				"childId":  childID,
-				"name":     p.FullName,
-				"birthday": p.Birthday,
-				"gender":   p.Gender,
+				"childID":    childID,
+				"gender":     p.Gender,
+				"personData": personData,
 			},
 		)
 	})
 
-	log.Println(result)
+	log.Println(json.Marshal(result))
 
 	return nil, err
 }
 
-func hasParent(session neo4j.Session, childID string, parentGender Gender) (bool, error) {
-	result, err := session.ReadTransaction(func(tx neo4j.Transaction) (interface{}, error) {
-		records, err := tx.Run(
-			`MATCH (:Person {id:$childID})-[:Parent]->(:Person {gender:$gender}) 
-			WITH count(*) as count
-			CALL apoc.when (count > 0, // a person can only have one dad
-			"RETURN true AS bool",     // one or more parent of given gender
-			"RETURN false AS bool",    // no parent with given gender
-			{count:count}
-			) YIELD value
-			return value.bool
+func (p Person) CreateChild(parentID string) (*Person, error) {
+	personData, err := p.getData()
+	if err != nil {
+		return nil, err
+	}
+	session := db.GetNewSession()
+	defer session.Close()
+
+	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+		// maybe make merge to make this function more usable
+		return tx.Run(
+			`MATCH (p:Person { id: $parentID })
+			WITH p
+			CREATE (c:Person { id: apoc.create.uuid() })-[:Parent]->(p)
+			SET c += $personData
+			RETURN c
 			`,
 			map[string]interface{}{
-				"childId": childID,
-				"gender":  parentGender,
+				"parentID":   parentID,
+				"personData": personData,
 			},
 		)
-		if err != nil {
-			return nil, err
-		}
-		record, err := records.Single()
-		if err != nil {
-			return nil, err
-		}
-		return record.Values[0].(bool), nil
 	})
-	if err != nil {
-		return false, err
-	}
-	return result.(bool), nil
+
+	log.Println(json.Marshal(result))
+
+	return nil, err
+}
+
+func (p Person) CreateLink(childID string, parentID string) (*Person, error) {
+	session := db.GetNewSession()
+	defer session.Close()
+
+	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+		// maybe make merge to make this function more usable
+		return tx.Run(
+			`MATCH (c:Person {id: $childID}), (p:Person { id: $parentID })
+			WITH c, p
+			OPTIONAL MATCH (c)-[:Parent]->(q:Person {gender: p.gender})
+			WITH c, p, q WHERE q IS NULL
+			CREATE (c)-[:Parent]->(p)
+			`,
+			map[string]interface{}{
+				"childID":  childID,
+				"parentID": parentID,
+			},
+		)
+	})
+
+	log.Println(json.Marshal(result))
+
+	return nil, err
 }

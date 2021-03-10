@@ -61,8 +61,8 @@ func (p PersonController) Create(c *gin.Context) {
 	return
 }
 
-// CreateLink godoc
-// @Summary Create Person link
+// CreateParent godoc
+// @Summary Create Parent link
 // @Description Creates a Person
 // @Tags person
 // @Accept  json
@@ -70,14 +70,64 @@ func (p PersonController) Create(c *gin.Context) {
 // @Param id path string true "Person ID"
 // @Param person body models.Person true "Person"
 // @Success 200 {object} string
-// @Router /person/{id} [post]
-func (p PersonController) CreateLink(c *gin.Context) {
+// @Router /person/parent/{id} [post]
+func (p PersonController) CreateParent(c *gin.Context) {
 	var newPerson models.Person
 	err := c.ShouldBindJSON(&newPerson)
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
 	}
 	gg, err := newPerson.CreateParent(c.Param("id"))
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request", "body": gg})
+	c.Abort()
+	return
+}
+
+// CreateChild godoc
+// @Summary Create Child link
+// @Description Creates a Person
+// @Tags person
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Person ID"
+// @Param person body models.Person true "Person"
+// @Success 200 {object} string
+// @Router /person/child/{id} [post]
+func (p PersonController) CreateChild(c *gin.Context) {
+	var newPerson models.Person
+	err := c.ShouldBindJSON(&newPerson)
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
+	}
+	gg, err := newPerson.CreateChild(c.Param("id"))
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request", "body": gg})
+	c.Abort()
+	return
+}
+
+// CreateLink godoc
+// @Summary Create Child link
+// @Description Creates a Person
+// @Tags person
+// @Accept  json
+// @Produce  json
+// @Param childId path string true "Child ID"
+// @Param parentId path string true "Parent ID"
+// @Success 200 {object} string
+// @Router /person/link/{childId}/{parentId} [post]
+func (p PersonController) CreateLink(c *gin.Context) {
+	var newPerson models.Person
+	err := c.ShouldBindJSON(&newPerson)
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
+	}
+	gg, err := newPerson.CreateChild(c.Param("id"))
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
 	}

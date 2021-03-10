@@ -28,17 +28,21 @@ func NewRouter() *gin.Engine {
 		{
 			user := new(controllers.PersonController)
 			personGroup.GET("/:id", user.Get)
-			personGroup.GET("/:id/parents", user.Get)
-			personGroup.GET("/:id/siblings", user.Get)
-			personGroup.GET("/:id/profile", user.Get)
+			//personGroup.GET("/parents/:id", user.GetParents)
+			//personGroup.GET("/siblings/:id", user.GetSiblings)
+			//personGroup.GET("/children/:id", user.GetChildren)
 			personGroup.POST("/", user.Create)
-			personGroup.POST("/:id", user.CreateLink)
+			//personGroup.PUT("/:id", user.Update)
+			personGroup.POST("/parents/:id", user.CreateParent)
+			personGroup.POST("/child/:id", user.CreateChild)
+			personGroup.POST("/link/:childId/:parentId", user.CreateLink)
+			//personGroup.DELETE(":id", user.Delete)
 		}
-		relationGroup := api.Group("relation")
-		{
-			relation := new(controllers.PersonController)
-			relationGroup.GET("/:id", relation.Get)
-		}
+		// relationGroup := api.Group("profile")
+		// {
+		// 	profile := new(controllers.ProfileController)
+		// 	relationGroup.GET("/:id", profile.GetProfile)
+		// }
 
 	}
 

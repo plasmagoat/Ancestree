@@ -52,6 +52,127 @@
                 }
             }
         },
+        "/person/child/{id}": {
+            "post": {
+                "description": "Creates a Person",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Create Child link",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Person ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Person",
+                        "name": "person",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/person/link/{childId}/{parentId}": {
+            "post": {
+                "description": "Creates a Person",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Create Child link",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Child ID",
+                        "name": "childId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Parent ID",
+                        "name": "parentId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/person/parent/{id}": {
+            "post": {
+                "description": "Creates a Person",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Create Parent link",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Person ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Person",
+                        "name": "person",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/person/{id}": {
             "get": {
                 "description": "Gets Person by ID",
@@ -82,45 +203,6 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Creates a Person",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "person"
-                ],
-                "summary": "Create Person link",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Person ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Person",
-                        "name": "person",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Person"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
             }
         }
     },
@@ -131,26 +213,17 @@
                 "birthday": {
                     "type": "string"
                 },
-                "father": {
-                    "$ref": "#/definitions/models.Person"
+                "birthname": {
+                    "type": "string"
                 },
-                "firstname": {
+                "deathday": {
                     "type": "string"
                 },
                 "fullname": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "lastname": {
-                    "type": "string"
-                },
-                "middlenames": {
-                    "type": "string"
-                },
-                "mother": {
-                    "$ref": "#/definitions/models.Person"
+                "gender": {
+                    "type": "integer"
                 }
             }
         }

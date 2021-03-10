@@ -4,20 +4,14 @@ definitions:
     properties:
       birthday:
         type: string
-      father:
-        $ref: '#/definitions/models.Person'
-      firstname:
+      birthname:
+        type: string
+      deathday:
         type: string
       fullname:
         type: string
-      id:
-        type: string
-      lastname:
-        type: string
-      middlenames:
-        type: string
-      mother:
-        $ref: '#/definitions/models.Person'
+      gender:
+        type: integer
     type: object
 host: localhost:8080
 info:
@@ -76,6 +70,7 @@ paths:
       summary: Get Person
       tags:
       - person
+  /person/child/{id}:
     post:
       consumes:
       - application/json
@@ -99,7 +94,60 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Create Person link
+      summary: Create Child link
+      tags:
+      - person
+  /person/link/{childId}/{parentId}:
+    post:
+      consumes:
+      - application/json
+      description: Creates a Person
+      parameters:
+      - description: Child ID
+        in: path
+        name: childId
+        required: true
+        type: string
+      - description: Parent ID
+        in: path
+        name: parentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Child link
+      tags:
+      - person
+  /person/parent/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Creates a Person
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Person
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Parent link
       tags:
       - person
 securityDefinitions:
