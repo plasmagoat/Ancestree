@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// HealthController ...
 type HealthController struct{}
 
 // Status godoc

@@ -25,6 +25,7 @@ func NewRouter() *gin.Engine {
 	api := router.Group("api")
 	{
 		user := new(controllers.PersonController)
+		tree := new(controllers.TreeController)
 		personGroup := api.Group("person")
 		{
 			personGroup.GET("/:id", user.Get)
@@ -40,7 +41,7 @@ func NewRouter() *gin.Engine {
 		}
 		treeGroup := api.Group("tree")
 		{
-			treeGroup.GET("/:id", user.GetFamiliyTree)
+			treeGroup.GET("/:id", tree.GetFamiliyTree)
 		}
 		// relationGroup := api.Group("profile")
 		// {
