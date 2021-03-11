@@ -11,6 +11,7 @@ import (
 type PersonController struct{}
 
 var personModel = new(models.Person)
+var familtyTreeModel = new(models.FamilyTree)
 
 // Get godoc
 // @Summary Get Person
@@ -19,7 +20,7 @@ var personModel = new(models.Person)
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Person ID"
-// @Success 200 {object} string
+// @Success 200 {object} models.Person
 // @Router /person/{id} [get]
 func (p PersonController) Get(c *gin.Context) {
 	if c.Param("id") != "" {
@@ -44,7 +45,7 @@ func (p PersonController) Get(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param person body models.Person true "Person"
-// @Success 200 {object} string
+// @Success 200 {object} models.Person
 // @Router /person/ [post]
 func (p PersonController) Create(c *gin.Context) {
 	var newPerson models.Person
@@ -69,7 +70,7 @@ func (p PersonController) Create(c *gin.Context) {
 // @Produce  json
 // @Param id path string true "Person ID"
 // @Param person body models.Person true "Person"
-// @Success 200 {object} string
+// @Success 200 {object} models.Person
 // @Router /person/parent/{id} [post]
 func (p PersonController) CreateParent(c *gin.Context) {
 	var newPerson models.Person
@@ -94,7 +95,7 @@ func (p PersonController) CreateParent(c *gin.Context) {
 // @Produce  json
 // @Param id path string true "Person ID"
 // @Param person body models.Person true "Person"
-// @Success 200 {object} string
+// @Success 200 {object} models.Person
 // @Router /person/child/{id} [post]
 func (p PersonController) CreateChild(c *gin.Context) {
 	var newPerson models.Person
@@ -102,11 +103,11 @@ func (p PersonController) CreateChild(c *gin.Context) {
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
 	}
-	gg, err := newPerson.CreateChild(c.Param("id"))
+	newChild, err := newPerson.CreateChild(c.Param("id"))
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
 	}
-	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request", "body": gg})
+	c.JSON(http.StatusOK, gin.H{"newChild": newChild})
 	c.Abort()
 	return
 }
@@ -127,11 +128,36 @@ func (p PersonController) CreateLink(c *gin.Context) {
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
 	}
-	gg, err := newPerson.CreateChild(c.Param("id"))
+	gg, err := newPerson.CreateLink(c.Param("childId"), c.Param("parentId"))
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
 	}
 	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request", "body": gg})
+	c.Abort()
+	return
+}
+
+// GetFamiliyTree godoc
+// @Summary Get Familiy Tree
+// @Description Gets Familiy Tree for a given Person ID
+// @Tags tree
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Person ID"
+// @Success 200 {object} models.FamilyTree
+// @Router /tree/{id} [get]
+func (p PersonController) GetFamiliyTree(c *gin.Context) {
+	if c.Param("id") != "" {
+		tree, err := familtyTreeModel.GetForID(c.Param("id"), 4)
+		if err != nil {
+			httputil.NewError(c, http.StatusInternalServerError, err, "Error while getting tree")
+			c.Abort()
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Done", "tree": tree})
+		return
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
 	c.Abort()
 	return
 }

@@ -7,16 +7,17 @@ import (
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j/dbtype"
 )
 
 //Person model
 type Person struct {
 	ID        string    `json:"id,omitempty" swaggerignore:"true"`
-	FullName  string    `json:"fullname"`
-	BirthName string    `json:"birthname"`
-	Birthday  time.Time `json:"birthday"`
-	Deathday  time.Time `json:"deathday"`
-	Gender    Gender    `json:"gender"`
+	FullName  string    `json:"fullname,omitempty"`
+	BirthName string    `json:"birthname,omitempty"`
+	Birthday  time.Time `json:"birthday,omitempty"`
+	Deathday  time.Time `json:"deathday,omitempty"`
+	Gender    Gender    `json:"gender,omitempty"`
 }
 
 //Gender enum
@@ -42,29 +43,54 @@ func (p *Person) getData() (map[string]interface{}, error) {
 	return personData, nil
 }
 
+func createFromNode(n dbtype.Node) (Person, error) {
+	person := Person{}
+
+	jsonPerson, err := json.Marshal(n.Props)
+	if err != nil {
+		return person, err
+	}
+	err = json.Unmarshal(jsonPerson, &person)
+	if err != nil {
+		return person, err
+	}
+	return person, err
+}
+
+//GetByID gets a Person with a given ID
 func (p Person) GetByID(id string) (*Person, error) {
-	//do db call
-	driver := db.GetDriver()
-	session := driver.NewSession(neo4j.SessionConfig{
-		AccessMode:   neo4j.AccessModeRead,
-		DatabaseName: "ancestree",
-	})
+	session := db.GetNewSession()
 	defer session.Close()
 
 	result, err := session.ReadTransaction(func(tx neo4j.Transaction) (interface{}, error) {
-		return tx.Run(
-			"MATCH (p:Person {id: $id}) RETURN p.name AS name, p.birthday AS birthday",
+		records, err := tx.Run(
+			`MATCH (p:Person {id: $id}) 
+			RETURN p`,
 			map[string]interface{}{
 				"id": id,
 			},
 		)
+		// In face of driver native errors, make sure to return them directly.
+		// Depending on the error, the driver may try to execute the function again.
+		if err != nil {
+			return nil, err
+		}
+		record, err := records.Single()
+		if err != nil {
+			return nil, err
+		}
+
+		person, err := createFromNode(record.Values[0].(dbtype.Node))
+		return &person, nil
 	})
 
-	log.Println(result)
-
-	return nil, err
+	if err != nil {
+		return nil, err
+	}
+	return result.(*Person), nil
 }
 
+//Create creates a Person node and returns the new Person
 func (p Person) Create() (*Person, error) {
 	personData, err := p.getData()
 	if err != nil {
@@ -75,22 +101,37 @@ func (p Person) Create() (*Person, error) {
 	defer session.Close()
 
 	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
-		return tx.Run(
+		records, err := tx.Run(
 			`CREATE (p:Person { id: apoc.create.uuid() })
 			SET p += $personData
+			RETURN p
 			`,
 			map[string]interface{}{
 				"personData": personData,
 			},
 		)
+		// In face of driver native errors, make sure to return them directly.
+		// Depending on the error, the driver may try to execute the function again.
+		if err != nil {
+			return nil, err
+		}
+		record, err := records.Single()
+		if err != nil {
+			return nil, err
+		}
+
+		person, err := createFromNode(record.Values[0].(dbtype.Node))
+		return &person, nil
 	})
 
-	log.Println(result)
-
-	return nil, err
+	if err != nil {
+		return nil, err
+	}
+	return result.(*Person), nil
 }
 
-func (p Person) CreateParent(childID string) (*Person, error) {
+//CreateParent creates a Person node with a parent relation to given ID and returns the new parent Person
+func (p *Person) CreateParent(childID string) (*Person, error) {
 	personData, err := p.getData()
 	if err != nil {
 		return nil, err
@@ -100,7 +141,7 @@ func (p Person) CreateParent(childID string) (*Person, error) {
 
 	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
 		// maybe make merge to make this function more usable
-		return tx.Run(
+		records, err := tx.Run(
 			`MATCH (c:Person { id: $childID })
 			WITH c
 			OPTIONAL MATCH (c)-[:Parent]->(q:Person {gender: $gender})
@@ -115,13 +156,28 @@ func (p Person) CreateParent(childID string) (*Person, error) {
 				"personData": personData,
 			},
 		)
+
+		// In face of driver native errors, make sure to return them directly.
+		// Depending on the error, the driver may try to execute the function again.
+		if err != nil {
+			return nil, err
+		}
+		record, err := records.Single()
+		if err != nil {
+			return nil, err
+		}
+
+		person, err := createFromNode(record.Values[0].(dbtype.Node))
+		return &person, nil
 	})
 
-	log.Println(json.Marshal(result))
-
-	return nil, err
+	if err != nil {
+		return nil, err
+	}
+	return result.(*Person), nil
 }
 
+//CreateChild creates a Person node with a inverce parent (aka child) relation to given Person ID and returns the new child Person
 func (p Person) CreateChild(parentID string) (*Person, error) {
 	personData, err := p.getData()
 	if err != nil {
@@ -131,8 +187,7 @@ func (p Person) CreateChild(parentID string) (*Person, error) {
 	defer session.Close()
 
 	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
-		// maybe make merge to make this function more usable
-		return tx.Run(
+		records, err := tx.Run(
 			`MATCH (p:Person { id: $parentID })
 			WITH p
 			CREATE (c:Person { id: apoc.create.uuid() })-[:Parent]->(p)
@@ -144,19 +199,33 @@ func (p Person) CreateChild(parentID string) (*Person, error) {
 				"personData": personData,
 			},
 		)
+		// In face of driver native errors, make sure to return them directly.
+		// Depending on the error, the driver may try to execute the function again.
+		if err != nil {
+			return nil, err
+		}
+		record, err := records.Single()
+		if err != nil {
+			return nil, err
+		}
+
+		person, err := createFromNode(record.Values[0].(dbtype.Node))
+		return &person, nil
 	})
 
-	log.Println(json.Marshal(result))
-
-	return nil, err
+	if err != nil {
+		return nil, err
+	}
+	return result.(*Person), nil
 }
 
+//CreateLink creates a Parent relation between a Person with childID and a Person with parentID
+//what should this return?
 func (p Person) CreateLink(childID string, parentID string) (*Person, error) {
 	session := db.GetNewSession()
 	defer session.Close()
 
 	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
-		// maybe make merge to make this function more usable
 		return tx.Run(
 			`MATCH (c:Person {id: $childID}), (p:Person { id: $parentID })
 			WITH c, p

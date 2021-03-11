@@ -61,7 +61,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Person"
                         }
                     }
                 }
@@ -102,7 +102,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Person"
                         }
                     }
                 }
@@ -182,7 +182,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Person"
                         }
                     }
                 }
@@ -214,7 +214,39 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                }
+            }
+        },
+        "/tree/{id}": {
+            "get": {
+                "description": "Gets Familiy Tree for a given Person ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tree"
+                ],
+                "summary": "Get Familiy Tree",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Person ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.FamilyTree"
                         }
                     }
                 }
@@ -222,6 +254,23 @@ var doc = `{
         }
     },
     "definitions": {
+        "models.FamilyTree": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Relation"
+                    }
+                },
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Person"
+                    }
+                }
+            }
+        },
         "models.Person": {
             "type": "object",
             "properties": {
@@ -239,6 +288,17 @@ var doc = `{
                 },
                 "gender": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Relation": {
+            "type": "object",
+            "properties": {
+                "child": {
+                    "type": "string"
+                },
+                "parent": {
+                    "type": "string"
                 }
             }
         }

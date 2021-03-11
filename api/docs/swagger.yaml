@@ -1,5 +1,16 @@
 basePath: /api/v1
 definitions:
+  models.FamilyTree:
+    properties:
+      edges:
+        items:
+          $ref: '#/definitions/models.Relation'
+        type: array
+      nodes:
+        items:
+          $ref: '#/definitions/models.Person'
+        type: array
+    type: object
   models.Person:
     properties:
       birthday:
@@ -12,6 +23,13 @@ definitions:
         type: string
       gender:
         type: integer
+    type: object
+  models.Relation:
+    properties:
+      child:
+        type: string
+      parent:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -45,7 +63,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Person'
       summary: Create Person
       tags:
       - person
@@ -66,7 +84,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Person'
       summary: Get Person
       tags:
       - person
@@ -93,7 +111,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Person'
       summary: Create Child link
       tags:
       - person
@@ -146,10 +164,31 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Person'
       summary: Create Parent link
       tags:
       - person
+  /tree/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Gets Familiy Tree for a given Person ID
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FamilyTree'
+      summary: Get Familiy Tree
+      tags:
+      - tree
 securityDefinitions:
   ApiKeyAuth:
     in: header

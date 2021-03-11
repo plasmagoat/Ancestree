@@ -24,9 +24,9 @@ func NewRouter() *gin.Engine {
 
 	api := router.Group("api")
 	{
+		user := new(controllers.PersonController)
 		personGroup := api.Group("person")
 		{
-			user := new(controllers.PersonController)
 			personGroup.GET("/:id", user.Get)
 			//personGroup.GET("/parents/:id", user.GetParents)
 			//personGroup.GET("/siblings/:id", user.GetSiblings)
@@ -37,6 +37,10 @@ func NewRouter() *gin.Engine {
 			personGroup.POST("/child/:id", user.CreateChild)
 			personGroup.POST("/link/:childId/:parentId", user.CreateLink)
 			//personGroup.DELETE(":id", user.Delete)
+		}
+		treeGroup := api.Group("tree")
+		{
+			treeGroup.GET("/:id", user.GetFamiliyTree)
 		}
 		// relationGroup := api.Group("profile")
 		// {

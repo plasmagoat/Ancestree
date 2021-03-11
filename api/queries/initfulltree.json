@@ -1,0 +1,347 @@
+[
+  {
+    "keys": ["nodes", "rels"],
+    "length": 2,
+    "_fields": [
+      [
+        {
+          "fullname": "David Mikael Blum Samuelsen",
+          "id": "06438e86-b6ae-4601-a4f3-f5d38c60c4df",
+          "birthday": {
+            "year": {
+              "low": 1993,
+              "high": 0
+            },
+            "month": {
+              "low": 12,
+              "high": 0
+            },
+            "day": {
+              "low": 14,
+              "high": 0
+            }
+          },
+          "gender": {
+            "low": 1,
+            "high": 0
+          }
+        },
+        {
+          "birthday": {
+            "year": {
+              "low": 1964,
+              "high": 0
+            },
+            "month": {
+              "low": 7,
+              "high": 0
+            },
+            "day": {
+              "low": 1,
+              "high": 0
+            }
+          },
+          "birthname": "Peter Samuelsen",
+          "id": "9e27dd8f-59c7-4469-852d-d2edd26e6c5f",
+          "fullname": "Peter Blum Samuelsen",
+          "gender": {
+            "low": 1,
+            "high": 0
+          }
+        },
+        {
+          "birthday": {
+            "year": {
+              "low": 1966,
+              "high": 0
+            },
+            "month": {
+              "low": 11,
+              "high": 0
+            },
+            "day": {
+              "low": 24,
+              "high": 0
+            }
+          },
+          "birthname": "Aline Elisabeth Morgenstjerne",
+          "id": "6e29803e-8a44-4378-8707-c958df0b0476",
+          "fullname": "Aline Elisabeth Blum Samuelsen",
+          "gender": {
+            "low": 2,
+            "high": 0
+          }
+        },
+        {
+          "fullname": "Per Samuelsen",
+          "id": "be27e9f2-0647-4a4b-9b99-fd707488c303",
+          "birthday": {
+            "year": {
+              "low": 1936,
+              "high": 0
+            },
+            "month": {
+              "low": 2,
+              "high": 0
+            },
+            "day": {
+              "low": 5,
+              "high": 0
+            }
+          },
+          "gender": {
+            "low": 1,
+            "high": 0
+          }
+        },
+        {
+          "birthday": {
+            "year": {
+              "low": 1936,
+              "high": 0
+            },
+            "month": {
+              "low": 9,
+              "high": 0
+            },
+            "day": {
+              "low": 6,
+              "high": 0
+            }
+          },
+          "birthname": "Hanne Vibeke Plesner",
+          "id": "98aede21-b33e-48e9-8585-a6c35baf2557",
+          "fullname": "Hanne Vibeke Samuelsen",
+          "gender": {
+            "low": 2,
+            "high": 0
+          }
+        },
+        {
+          "birthday": {
+            "year": {
+              "low": 1991,
+              "high": 0
+            },
+            "month": {
+              "low": 7,
+              "high": 0
+            },
+            "day": {
+              "low": 15,
+              "high": 0
+            }
+          },
+          "birthname": "Cecilie Marie Blum Samuelsen",
+          "id": "0ae387ae-73a1-4866-a1a1-9fcaf7b77a45",
+          "fullname": "Cecilie Morgenstjerne Lindholt",
+          "gender": {
+            "low": 2,
+            "high": 0
+          }
+        },
+        {
+          "fullname": "Elise Ida Blum Samuelsen",
+          "id": "74571b51-0c80-436e-9a79-f5f054514251",
+          "birthday": {
+            "year": {
+              "low": 1995,
+              "high": 0
+            },
+            "month": {
+              "low": 8,
+              "high": 0
+            },
+            "day": {
+              "low": 24,
+              "high": 0
+            }
+          },
+          "gender": {
+            "low": 2,
+            "high": 0
+          }
+        },
+        {
+          "fullname": "Joakim Filip Blum Samuelsen",
+          "id": "5334dadb-80e7-4f33-8074-45b2ceb829bb",
+          "birthday": {
+            "year": {
+              "low": 1997,
+              "high": 0
+            },
+            "month": {
+              "low": 11,
+              "high": 0
+            },
+            "day": {
+              "low": 28,
+              "high": 0
+            }
+          },
+          "gender": {
+            "low": 1,
+            "high": 0
+          }
+        },
+        {
+          "fullname": "Jakob Kristian Blum Samuelsen",
+          "id": "2d47f2d3-9779-404a-bf7a-6af2279c7878",
+          "birthday": {
+            "year": {
+              "low": 2003,
+              "high": 0
+            },
+            "month": {
+              "low": 4,
+              "high": 0
+            },
+            "day": {
+              "low": 17,
+              "high": 0
+            }
+          },
+          "gender": {
+            "low": 1,
+            "high": 0
+          }
+        },
+        {
+          "birthday": {
+            "year": {
+              "low": 1928,
+              "high": 0
+            },
+            "month": {
+              "low": 6,
+              "high": 0
+            },
+            "day": {
+              "low": 26,
+              "high": 0
+            }
+          },
+          "id": "44091027-c341-49d9-abd3-9e648f504b3a",
+          "fullname": "Heinrich Peter Procopius Morgenstjerne",
+          "deathday": {
+            "year": {
+              "low": 2011,
+              "high": 0
+            },
+            "month": {
+              "low": 3,
+              "high": 0
+            },
+            "day": {
+              "low": 7,
+              "high": 0
+            }
+          },
+          "gender": {
+            "low": 1,
+            "high": 0
+          }
+        },
+        {
+          "birthday": {
+            "year": {
+              "low": 1934,
+              "high": 0
+            },
+            "month": {
+              "low": 12,
+              "high": 0
+            },
+            "day": {
+              "low": 16,
+              "high": 0
+            }
+          },
+          "birthname": "Aline Marianne Margrethe Blum",
+          "id": "fd7c6284-31d9-41b6-97eb-35c966e48a63",
+          "fullname": "Aline Marianne Margrethe Morgenstjerne",
+          "gender": {
+            "low": 2,
+            "high": 0
+          }
+        }
+      ],
+      [
+        {
+          "source": "David Mikael Blum Samuelsen",
+          "type": "Parent",
+          "target": "Peter Blum Samuelsen"
+        },
+        {
+          "source": "David Mikael Blum Samuelsen",
+          "type": "Parent",
+          "target": "Aline Elisabeth Blum Samuelsen"
+        },
+        {
+          "source": "Peter Blum Samuelsen",
+          "type": "Parent",
+          "target": "Per Samuelsen"
+        },
+        {
+          "source": "Peter Blum Samuelsen",
+          "type": "Parent",
+          "target": "Hanne Vibeke Samuelsen"
+        },
+        {
+          "source": "Aline Elisabeth Blum Samuelsen",
+          "type": "Parent",
+          "target": "Heinrich Peter Procopius Morgenstjerne"
+        },
+        {
+          "source": "Aline Elisabeth Blum Samuelsen",
+          "type": "Parent",
+          "target": "Aline Marianne Margrethe Morgenstjerne"
+        },
+        {
+          "source": "Cecilie Morgenstjerne Lindholt",
+          "type": "Parent",
+          "target": "Peter Blum Samuelsen"
+        },
+        {
+          "source": "Cecilie Morgenstjerne Lindholt",
+          "type": "Parent",
+          "target": "Aline Elisabeth Blum Samuelsen"
+        },
+        {
+          "source": "Elise Ida Blum Samuelsen",
+          "type": "Parent",
+          "target": "Peter Blum Samuelsen"
+        },
+        {
+          "source": "Elise Ida Blum Samuelsen",
+          "type": "Parent",
+          "target": "Aline Elisabeth Blum Samuelsen"
+        },
+        {
+          "source": "Joakim Filip Blum Samuelsen",
+          "type": "Parent",
+          "target": "Peter Blum Samuelsen"
+        },
+        {
+          "source": "Joakim Filip Blum Samuelsen",
+          "type": "Parent",
+          "target": "Aline Elisabeth Blum Samuelsen"
+        },
+        {
+          "source": "Jakob Kristian Blum Samuelsen",
+          "type": "Parent",
+          "target": "Aline Elisabeth Blum Samuelsen"
+        },
+        {
+          "source": "Jakob Kristian Blum Samuelsen",
+          "type": "Parent",
+          "target": "Peter Blum Samuelsen"
+        }
+      ]
+    ],
+    "_fieldLookup": {
+      "nodes": 0,
+      "rels": 1
+    }
+  }
+]
