@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	environment := flag.String("e", "development", "")
+	environment := flag.String("e", "devdocker", "")
 	flag.Usage = func() {
 		fmt.Println("Usage: server -e {mode}")
 		os.Exit(1)
@@ -23,6 +23,7 @@ func main() {
 }
 
 // @title Swagger Example API
+//
 // @version 1.0
 // @description This is a sample server celler server.
 // @termsOfService http://swagger.io/terms/
@@ -34,7 +35,7 @@ func main() {
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// @host localhost:9000
 // @BasePath /api/v1
 // @query.collection.format multi
 

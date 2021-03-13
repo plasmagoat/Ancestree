@@ -1,0 +1,147 @@
+{
+    "message": "Done",
+    "tree": {
+      "nodes": [
+        {
+          "id": "bdcaa46e-554c-4c6e-addf-45b010f33f1b",
+          "fullname": "David Mikael Blum Samuelsen",
+          "birthday": "1993-12-14T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 1
+        },
+        {
+          "id": "87acc606-0a2a-4343-a8ad-b57dc8867ddd",
+          "fullname": "Peter Blum Samuelsen",
+          "birthname": "Peter Samuelsen",
+          "birthday": "1964-07-01T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 1
+        },
+        {
+          "id": "bd7848c5-7699-46a9-a894-95d3d5270133",
+          "fullname": "Aline Elisabeth Blum Samuelsen",
+          "birthname": "Aline Elisabeth Morgenstjerne",
+          "birthday": "1966-11-24T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 2
+        },
+        {
+          "id": "0e4dbc0e-4ce5-4f2d-a565-f6b7fdd4f223",
+          "fullname": "Per Samuelsen",
+          "birthday": "1936-02-05T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 1
+        },
+        {
+          "id": "ea8f85af-9000-475f-9f14-a6fee7c5c8c2",
+          "fullname": "Hanne Vibeke Samuelsen",
+          "birthname": "Hanne Vibeke Plesner",
+          "birthday": "1936-09-06T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 2
+        },
+        {
+          "id": "c7c321f0-c8d3-4d80-87a4-3f465ab745ab",
+          "fullname": "Cecilie Morgenstjerne Lindholt",
+          "birthname": "Cecilie Marie Blum Samuelsen",
+          "birthday": "1991-07-15T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 2
+        },
+        {
+          "id": "cf97a62f-86fc-46b4-bbb8-0e9ea4799149",
+          "fullname": "Elise Ida Blum Samuelsen",
+          "birthday": "1995-08-24T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 2
+        },
+        {
+          "id": "d1374ed8-78e5-4a63-a6e9-01d9527744bb",
+          "fullname": "Joakim Filip Blum Samuelsen",
+          "birthday": "1997-11-28T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 1
+        },
+        {
+          "id": "5e081d5c-1f09-42e0-81c4-05c31054df04",
+          "fullname": "Jakob Kristian Blum Samuelsen",
+          "birthday": "2003-04-17T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 1
+        },
+        {
+          "id": "16da6188-f891-4d5f-a5bf-3025270d8619",
+          "fullname": "Heinrich Peter Procopius Morgenstjerne",
+          "birthday": "1928-06-26T00:00:00Z",
+          "deathday": "2011-03-07T00:00:00Z",
+          "gender": 1
+        },
+        {
+          "id": "ea23b713-7809-4d4d-b354-cc57136c7a0a",
+          "fullname": "Aline Marianne Margrethe Morgenstjerne",
+          "birthname": "Aline Marianne Margrethe Blum",
+          "birthday": "1934-12-16T00:00:00Z",
+          "deathday": "0001-01-01T00:00:00Z",
+          "gender": 2
+        }
+      ],
+      "edges": [
+        {
+          "source": "bdcaa46e-554c-4c6e-addf-45b010f33f1b",
+          "target": "87acc606-0a2a-4343-a8ad-b57dc8867ddd"
+        },
+        {
+          "source": "bdcaa46e-554c-4c6e-addf-45b010f33f1b",
+          "target": "bd7848c5-7699-46a9-a894-95d3d5270133"
+        },
+        {
+          "source": "87acc606-0a2a-4343-a8ad-b57dc8867ddd",
+          "target": "0e4dbc0e-4ce5-4f2d-a565-f6b7fdd4f223"
+        },
+        {
+          "source": "87acc606-0a2a-4343-a8ad-b57dc8867ddd",
+          "target": "ea8f85af-9000-475f-9f14-a6fee7c5c8c2"
+        },
+        {
+          "source": "bd7848c5-7699-46a9-a894-95d3d5270133",
+          "target": "16da6188-f891-4d5f-a5bf-3025270d8619"
+        },
+        {
+          "source": "bd7848c5-7699-46a9-a894-95d3d5270133",
+          "target": "ea23b713-7809-4d4d-b354-cc57136c7a0a"
+        },
+        {
+          "source": "c7c321f0-c8d3-4d80-87a4-3f465ab745ab",
+          "target": "87acc606-0a2a-4343-a8ad-b57dc8867ddd"
+        },
+        {
+          "source": "c7c321f0-c8d3-4d80-87a4-3f465ab745ab",
+          "target": "bd7848c5-7699-46a9-a894-95d3d5270133"
+        },
+        {
+          "source": "cf97a62f-86fc-46b4-bbb8-0e9ea4799149",
+          "target": "bd7848c5-7699-46a9-a894-95d3d5270133"
+        },
+        {
+          "source": "cf97a62f-86fc-46b4-bbb8-0e9ea4799149",
+          "target": "87acc606-0a2a-4343-a8ad-b57dc8867ddd"
+        },
+        {
+          "source": "d1374ed8-78e5-4a63-a6e9-01d9527744bb",
+          "target": "bd7848c5-7699-46a9-a894-95d3d5270133"
+        },
+        {
+          "source": "d1374ed8-78e5-4a63-a6e9-01d9527744bb",
+          "target": "87acc606-0a2a-4343-a8ad-b57dc8867ddd"
+        },
+        {
+          "source": "5e081d5c-1f09-42e0-81c4-05c31054df04",
+          "target": "bd7848c5-7699-46a9-a894-95d3d5270133"
+        },
+        {
+          "source": "5e081d5c-1f09-42e0-81c4-05c31054df04",
+          "target": "87acc606-0a2a-4343-a8ad-b57dc8867ddd"
+        }
+      ]
+    }
+  }

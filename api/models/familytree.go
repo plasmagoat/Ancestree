@@ -11,8 +11,8 @@ import (
 
 //FamilyTree with Person array and Relations array
 type FamilyTree struct {
-	Nodes []Person
-	Edges []Relation
+	Nodes []Person   `json:"nodes"`
+	Edges []Relation `json:"edges"`
 }
 
 //GetForID gets a FamilyTree for a Person with a given ID

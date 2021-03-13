@@ -1,6 +1,6 @@
 package models
 
 type Relation struct {
-	Child  string
-	Parent string
+	Child  string `json:"child"`
+	Parent string `json:"parent"`
 }
