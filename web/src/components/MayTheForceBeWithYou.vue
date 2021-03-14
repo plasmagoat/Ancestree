@@ -1,31 +1,7 @@
 <template>
-  <div id="forcedDirectedTree"></div>
-
-  <svg
-
-    :viewBox="[-this.w / 2, -this.h / 2, this.w, this.h]"
-    :width="this.w"
-    :height="this.h"
-  >
-    <g stroke="#999" stroke-opacity="0.4">
-      <line :key="e" v-for="e in treeState.edges">
-        {{ e.child }}
-      </line>
-      test
-    </g>
-    <g fill="#fff" stroke="#000" stroke-width="1.5">
-      <circle
-        v-for="n in treeState.nodes"
-        :key="n.id"
-        :r="5"
-        :cx="n.x"
-        :cy="n.y"
-        fill="#fff"
-        stroke="#000"
-      >
-      {{n.id}}
-      </circle>
-    </g>
+  <svg id="forcedDirectedTree">
+    <g id="edgecontainer" stroke="#999" stroke-opacity="1"></g>
+    <g id="nodecontainer" fill="#fff" stroke="#000" stroke-width="1.5"></g>
   </svg>
 </template>
 <script>
@@ -68,6 +44,7 @@ function dragger(simulation) {
     if (!event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
+    console.log(d.fullname);
   }
 
   function dragged(event, d) {
@@ -113,12 +90,31 @@ export default {
   mounted() {
     this.generateGraph();
   },
+  watch: {
+    nodesstate() {
+      this.generateGraph();
+    },
+  },
+  created() {
+    this.$store.dispatch(
+      "graph/getGraph",
+      "bdcaa46e-554c-4c6e-addf-45b010f33f1b"
+    );
+  },
   methods: {
     generateGraph() {
-      const simulation = forceSimulation(nodes)
+      //initialize simulation
+      const edgeobjects = this.edgesstate.map(function(t) {
+        return Object.create({ source: t.child, target: t.parent });
+      });
+      const nodeObjects = this.nodesstate.map(function(t) {
+        return Object.create(t);
+      });
+
+      const simulation = forceSimulation(nodeObjects)
         .force(
           "link",
-          forceLink(edges)
+          forceLink(edgeobjects)
             .id((d) => d.id)
             .distance(10)
             .strength(0.2)
@@ -128,33 +124,31 @@ export default {
         .force("y", forceY());
 
       const svg = select("#forcedDirectedTree")
-        .append("svg")
         .attr("viewBox", [-this.w / 2, -this.h / 2, this.w, this.h])
         .attr("width", this.w)
         .attr("height", this.h);
       //const svg = create("svg")
 
-      const link = svg
-        .append("g")
+      const link = select("#edgecontainer")
         .attr("stroke", "#999")
         .attr("stroke-opacity", 0.4)
         .selectAll("line")
-        .data(edges)
+        .data(edgeobjects)
         .join("line");
 
-      const node = svg
-        .append("g")
+      const node = select("#nodecontainer")
         .attr("fill", "#fff")
         .attr("stroke", "#000")
         .attr("stroke-width", 1.5)
         .selectAll("circle")
-        .data(nodes)
+        .data(nodeObjects)
         .join("circle")
         .attr("fill", (d) => (d.gender === 1 ? null : "#000"))
         .attr("stroke", (d) => (d.gender === 1 ? null : "#fff"))
         .attr("r", 7)
         .call(dragger(simulation));
 
+      // this comes in double...
       node.append("title").text((d) => d.fullname);
 
       simulation.on("tick", () => {
@@ -167,11 +161,8 @@ export default {
         node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
       });
     },
-    created() {
-      this.$store.dispatch(
-        "graph/getGraph",
-        "bdcaa46e-554c-4c6e-addf-45b010f33f1b"
-      );
+    updateGraph() {
+      //create whay of updating current simulation based on vue data..
     },
   },
 };

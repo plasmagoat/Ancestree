@@ -15,6 +15,7 @@
     "d3-selection": "^2.0.0",
     "idb-keyval": "^5.0.4",
     "vue": "^3.0.0",
+    "vue-d3-network": "^0.1.28",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0"
   },

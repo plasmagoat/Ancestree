@@ -1,37 +1,56 @@
 <template>
-  <div id="forcedDirectedTree"></div>
+  <input type="text" v-model="id" placeholder="Person ID" />
+  <button>{{ id }}</button>
+  <button @click="getGraph(id)">Get It</button>
+  <button @click="doSomething()">DO IT</button>
+  <!-- <div id="forcedDirectedTree">{{ treedata.nodes[0].x  }}</div> -->
 
-  <svg
+  <!-- <svg
+    v-if="simulation"
     :viewBox="[-this.w / 2, -this.h / 2, this.w, this.h]"
     :width="this.w"
     :height="this.h"
   >
-    <g stroke="#999" stroke-opacity="0.4">
-      <line :key="e" v-for="e in nodesstate">
+    <g id="edgecontainer" stroke="#999" stroke-opacity="1">
+      <line
+        v-for="e in treedata.edges"
+        :key="e"
+        v-bind:x1="e.source.x"
+        v-bind:y1="e.source.y"
+        v-bind:x2="e.target.x"
+        v-bind:y2="e.target.y"
+      >
         {{ e.child }}
       </line>
-      test
     </g>
-    <g fill="#fff" stroke="#000" stroke-width="1.5">
+    <g id="nodecontainer" fill="#fff" stroke="#000" stroke-width="1.5">
       <circle
-        v-for="n in treeState.nodes"
-        v-on:click="alert"
-        :key="n.id"
+        v-for="n in treedata.nodes"
+        :key="n.x"
         :r="5"
         :cx="n.x"
-        :cy="n.y"
+        v-bind:cy="n.y"
         fill="#fff"
         stroke="#000"
       >
-        {{ n.id }}
+        {{ n.fullname }}
       </circle>
     </g>
-  </svg>
+  </svg> -->
+  <d3ForceSimulation
+    :layout="layout"
+    :nodes="nodesarray"
+    :edges="links"
+  ></d3ForceSimulation>
+  <d3-network :net-nodes="nodesarray" :net-links="links" :options="options" />
 </template>
 <script>
 // @ is an alias to /src
-import { mapState } from "vuex";
-import { onBeforeMount } from "vue";
+import { mapState, useStore } from "vuex";
+import { computed, onBeforeMount, reactive, ref, watch } from "vue";
+import d3ForceSimulation from "./d3js/d3ForceSimulation.vue";
+import D3Network from "vue-d3-network";
+
 import { treeStore } from "../store/tree-store";
 import {
   forceSimulation,
@@ -40,28 +59,8 @@ import {
   forceX,
   forceY,
 } from "d3-force";
-import { select } from "d3-selection";
+import { select, selectAll } from "d3-selection";
 import { drag } from "d3-drag";
-
-// import { hierarchy } from "d3-hierarchy";
-// import json from "@/assets/flare-2.json";
-// const root = hierarchy(json);
-// //nodes
-// const nodes = root.descendants();
-// //edges
-// const edges = root.links();
-
-import json from "@/assets/test.json";
-
-const root = json.tree;
-//nodes
-const nodes = root.nodes.map(function(t) {
-  return Object.create(t);
-});
-//edges
-const edges = root.edges.map(function(t) {
-  return Object.create(t);
-});
 
 function dragger(simulation) {
   function dragstarted(event, d) {
@@ -89,45 +88,40 @@ function dragger(simulation) {
 
 export default {
   name: "ForceDirectedTree",
+  components: {
+    d3ForceSimulation,
+    D3Network,
+  },
   setup() {
-    onBeforeMount(async () => await treeStore.init());
-    treeStore.getGraph("bdcaa46e-554c-4c6e-addf-45b010f33f1b");
-    const alert = () => {
-                window.alert("hey")
-            }
-    return {
-      treeState: treeStore.getState(),
-      isInitialized: treeStore.getIsInitialized(),
-      alert
-    };
-  },
-  computed: {
-    ...mapState("graph", {
-      nodesstate: (state) => state.nodes,
-      edgesstate: (state) => state.edges,
-    }),
-  },
-  data() {
-    return {
-      w: 1000,
-      h: 600,
-    };
-  },
-  created() {
-    this.$store.dispatch(
-      "graph/getGraph",
-      "bdcaa46e-554c-4c6e-addf-45b010f33f1b"
-    );
-  },
-  mounted() {
-    this.generateGraph();
-  },
-  methods: {
-    generateGraph() {
-      const simulation = forceSimulation(nodes)
+    const id = ref("");
+    id.value = "bdcaa46e-554c-4c6e-addf-45b010f33f1b";
+    const store = useStore();
+    store.dispatch("graph/getGraph", id.value);
+    const storenodes = computed(() => store.state.graph.nodes);
+    const storeedges = computed(() => store.state.graph.edges);
+
+    const links = computed(() => {
+      return store.state.graph.edges.map(function(t) {
+        return { sid: t.child, tid: t.parent };
+      });
+    });
+
+    const nodesarray = computed(() => {
+      return store.state.graph.nodes.map(function(t) {
+        return t;
+      });
+    });
+    const simulation = computed(() => {
+      const edgeobjects = store.state.graph.edges.map(function(t) {
+        return Object.create({ source: t.child, target: t.parent });
+      });
+      const nodeObjects = store.state.graph.nodes.map(function(t) {
+        return Object.create(t);
+      });
+      const simulation = forceSimulation(nodeObjects)
         .force(
           "link",
-          forceLink(edges)
+          forceLink(edgeobjects)
             .id((d) => d.id)
             .distance(10)
             .strength(0.2)
@@ -136,46 +130,53 @@ export default {
         .force("x", forceX())
         .force("y", forceY());
 
-      const svg = select("#forcedDirectedTree")
-        .append("svg")
-        .attr("viewBox", [-this.w / 2, -this.h / 2, this.w, this.h])
-        .attr("width", this.w)
-        .attr("height", this.h);
-      //const svg = create("svg")
+      return simulation;
+    });
+    const nodes = computed(() => simulation.value.nodes());
+    const edges = computed(() => simulation.value.force("link").links());
 
-      const link = svg
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.4)
-        .selectAll("line")
-        .data(edges)
-        .join("line");
+    const treedata = reactive({
+      simulation: simulation,
+      nodes: computed(() => treedata.simulation.nodes()),
+      edges: computed(() => treedata.simulation.force("link").links()),
+      wordCount: computed(() => id.value.length),
+    });
+    const getGraph = (id) => store.dispatch("graph/getGraph", id);
 
-      const node = svg
-        .append("g")
-        .attr("fill", "#fff")
-        .attr("stroke", "#000")
-        .attr("stroke-width", 1.5)
-        .selectAll("circle")
-        .data(nodes)
-        .join("circle")
-        .attr("fill", (d) => (d.gender === 1 ? null : "#000"))
-        .attr("stroke", (d) => (d.gender === 1 ? null : "#fff"))
-        .attr("r", 7)
-        .call(dragger(simulation));
+    simulation.value.restart();
+    const doSomething = () => {
+      treedata.nodes.splice(0, 1, treedata.nodes[0]);
+      console.log(treedata.nodes[0]);
+      console.log(treedata.nodes[0].fullname);
+      simulation.value.stop();
+      simulation.value.restart();
+      simulation.value.alpha(0.5);
+    };
 
-      node.append("title").text((d) => d.fullname);
+    const layout = { height: 600, width: 1000 };
 
-      simulation.on("tick", () => {
-        link
-          .attr("x1", (d) => d.source.x)
-          .attr("y1", (d) => d.source.y)
-          .attr("x2", (d) => d.target.x)
-          .attr("y2", (d) => d.target.y);
+    const options = {
+      force: 3000,
+      nodeSize: 20,
+      nodeLabels: true,
+      linkWidth: 5,
+    };
 
-        node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-      });
-    },
+    return {
+      id,
+      nodesarray,
+      links,
+      storeedges,
+      storenodes,
+      treedata,
+      getGraph,
+      doSomething,
+      simulation,
+      layout,
+      options,
+      w: 1000,
+      h: 600,
+    };
   },
 };
 </script>
