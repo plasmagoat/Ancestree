@@ -1,20 +1,23 @@
 <template>
-  <div class="home">
-    <may-the-force-be-with-you></may-the-force-be-with-you>
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <div class="" />
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-import MayTheForceBeWithYou from "@/components/MayTheForceBeWithYou.vue";
+// import HelloWorld from "@/components/HelloWorld.vue";
+import { ref } from 'vue'
 export default {
-  name: "Home",
+  name: 'home',
   components: {
-    HelloWorld,
-    MayTheForceBeWithYou,
+    // HelloWorld,
   },
-};
+  setup() {
+    const open = ref(true)
+    const toggleMenu = () => {
+      open.value = !open.value
+      //setTimeout(() => (open.value = true), 1000)
+    }
+    return { open, toggleMenu }
+  },
+}
 </script>

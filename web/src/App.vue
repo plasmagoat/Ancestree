@@ -1,9 +1,13 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div class="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
+    <div id="nav">
+      <router-link to="/">Home</router-link>
+      |
+      <router-link to="/about">About</router-link>
+    </div>
+
+    <router-view />
   </div>
-  <router-view />
 </template>
 
 <style>
