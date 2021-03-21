@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="network"
-    :style="{ width: svgSize.width + 'px', height: svgSize.height + 'px' }"
-  >
+  <div id="network">
     <div
       v-show="linkTextVisible"
       class="linkText"
@@ -14,12 +11,7 @@
       xmlns:xlink="http://www.w3.org/1999/xlink"
       :width="svgSize.width"
       :height="svgSize.height"
-      :viewBox="[
-        -svgSize.width / 2,
-        -svgSize.height / 2,
-        svgSize.width,
-        svgSize.height,
-      ]"
+      :viewBox="viewBox"
       :style="{ 'background-color': theme.bgcolor }"
       @click="clickEle"
       @mouseover.prevent="svgMouseover"
@@ -82,7 +74,6 @@
       </g>
     </svg>
   </div>
-  <!-- </div> -->
 </template>
 
 <script>
@@ -190,6 +181,12 @@ export default {
         left: 0,
       },
       linkTextContent: '',
+      viewBox: [
+        -window.innerWidth / 4,
+        -window.innerHeight / 4,
+        window.innerWidth / 2,
+        window.innerHeight / 2,
+      ],
     }
   },
   computed: {
@@ -213,7 +210,7 @@ export default {
     theme() {
       if (this.svgTheme === 'light') {
         return {
-          bgcolor: 'white',
+          bgcolor: 'transparent',
           nodeStroke: 'white',
           linkStroke: 'lightgray',
           textFill: 'black',
@@ -230,6 +227,12 @@ export default {
     },
   },
   watch: {
+    svgSize: function() {
+      this.initData()
+      this.$nextTick(function() {
+        this.initDragTickZoom()
+      })
+    },
     bodyStrength: function() {
       this.initData()
       this.$nextTick(function() {
@@ -312,7 +315,7 @@ export default {
     },
     clickNode(e) {
       if (this.pinned.length === 0) {
-        this.pinnedState(e)
+        //this.pinnedState(e)
       } else {
         d3.selectAll('.element').style('opacity', 0.2)
         this.pinned = []

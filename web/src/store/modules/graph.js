@@ -1,40 +1,44 @@
-import tree from "../../api/tree";
+import tree from '../../api/tree'
 
 // initial state
 const state = () => ({
   nodes: [],
-  edges: []
-});
+  edges: [],
+  selectedNode: null,
+})
 
 // getters
-const getters = {};
+const getters = {
+  selectedNode: state => {
+    return state.nodes.find(n => n.id == state.selectedNode)
+  },
+}
 
 // actions
 const actions = {
   getGraph({ commit }, id) {
     tree.getGraph(id, graph => {
-      commit("setGraph", graph);
-    });
-  }
-};
+      commit('setGraph', graph)
+      commit('setSelectedNode', id)
+    })
+  },
+}
 
 // mutations
 const mutations = {
   setGraph(state, graph) {
-    state.nodes = graph.nodes;
-    state.edges = graph.edges;
-  }
-
-  // decrementProductInventory(state, { id }) {
-  //     const product = state.all.find(product => product.id === id)
-  //     product.inventory--
-  // }
-};
+    state.nodes = graph.nodes
+    state.edges = graph.edges
+  },
+  setSelectedNode(state, id) {
+    state.selectedNode = id
+  },
+}
 
 export default {
   namespaced: true,
   state,
   getters,
   actions,
-  mutations
-};
+  mutations,
+}
