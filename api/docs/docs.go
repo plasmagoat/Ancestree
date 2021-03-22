@@ -299,6 +299,9 @@ var doc = `{
                 },
                 "parent": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         }

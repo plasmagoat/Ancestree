@@ -1,11 +1,13 @@
 <template>
-  <input type="text" v-model="id" placeholder="Person ID" />
-  <button @click="getGraph(id)">Get It</button>
-  <network
-    :node-list="nodesarray"
-    :link-list="links"
-    node-text-key="fullname"
-  />
+  <div>
+    <input type="text" v-model="id" placeholder="Person ID" />
+    <button @click="getGraph(id)">Get It</button>
+    <network
+      :node-list="nodesarray"
+      :link-list="links"
+      node-text-key="fullname"
+    />
+  </div>
 </template>
 <script>
 // @ is an alias to /src

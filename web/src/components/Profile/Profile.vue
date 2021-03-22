@@ -1,12 +1,32 @@
 <template>
-  <div
-    class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-xl p-4 pb-6 sm:p-8 lg:p-4 lg:pb-6 xl:p-8 space-y-6 sm:space-y-8 lg:space-y-6 xl:space-y-8"
-  >
-    <h1>{{ node.fullname }}</h1>
-    <h2>{{ node.birthday }}</h2>
-    <standard-button text="Add Parent" />
-    <standard-button text="Add Child" />
-    <standard-button text="Edit" />
+  <div class="py-6 flex flex-col justify-start">
+    <div class="relative p-3">
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-green-800 to-green-600 shadow-lg transform skew-y-0 -rotate-6 rounded-3xl"
+      />
+      <div
+        class="relative px-4 py-10 bg-gray-100 dark:bg-gray-700 shadow-lg rounded-3xl text"
+      >
+        <h1 class="text-lg font-bold">
+          {{ node.fullname }}
+        </h1>
+        <h2>
+          {{
+            new Date(Date.parse(node.birthday)).toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          }}
+        </h2>
+      </div>
+    </div>
+    <div class="p-3 flex flex-row mt-5">
+      <standard-button class="flex-1" text="Add Parent" />
+      <standard-button class="flex-1 mx-2" text="Add Child" />
+      <standard-button class="flex-1" text="Edit" />
+    </div>
   </div>
 </template>
 <script>
@@ -22,3 +42,8 @@ export default {
   },
 }
 </script>
+<style>
+.text {
+  @apply dark:text-gray-100;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="network">
+  <div id="network" class="relative">
     <div
       v-show="linkTextVisible"
       class="linkText"
@@ -45,7 +45,7 @@
           <g :key="node.index" v-for="node in nodes">
             <circle
               :fill="nodeColor(node[nodeTypeKey])"
-              :stroke-width="highlightNodes.indexOf(node.id) == -1 ? 3 : 10"
+              :stroke-width="highlightNodes.indexOf(node.id) == -1 ? 3 : 4"
               :stroke="
                 highlightNodes.indexOf(node.id) == -1
                   ? theme.nodeStroke
@@ -73,6 +73,18 @@
         </g>
       </g>
     </svg>
+    <div class="absolute w-full bottom-1">
+      <input
+        class="relative block mx-auto rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-128"
+        type="range"
+        min="0.1"
+        max="4"
+        step="0.1"
+        :value="scale"
+        @change="slider"
+        @input="slider"
+      />
+    </div>
   </div>
 </template>
 
@@ -174,6 +186,7 @@ export default {
       pinned: [], // 被订住的节点的下标
       force: null,
       zoom: d3.zoom(),
+      scale: 1,
       nodeColor: d3.scaleOrdinal(d3.schemeCategory10),
       linkTextVisible: false,
       linkTextPosition: {
@@ -420,9 +433,16 @@ export default {
       this.selection.links = []
     },
     zoomed(event) {
+      this.setScale(event.transform.k)
+    },
+    slider(event) {
+      this.setScale(event.target.value)
+    },
+    setScale(scale) {
+      this.scale = scale
       d3.select('#container').attr(
         'transform',
-        `scale(${event.transform.k})`,
+        `scale(${this.scale})`,
         //translate(${event.transform.x},${event.transform.y})
       )
     },

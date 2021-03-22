@@ -1,33 +1,35 @@
 <template>
-  <div
-    :class="darkmode ? 'dark' : ''"
-    class="h-screen bg-green-700 flex flex-col"
-  >
-    <header
-      class="flex flex-wrap flex-row rounded-xl justify-between items-center md:space-x-4 bg-gray-100 py-1 px-4 relative mx-5 my-5"
-    >
-      <a href="#" class="block">
-        <span class="sr-only">themes.dev</span>
-        <img
-          class="h-8"
-          src="./assets/logo.png"
-          alt="Acestree Logo"
-          title="Themes.dev Logo"
-        />
-      </a>
-      <nav
-        class="flex flex-col md:flex-row md:space-x-6 font-semibold w-full md:w-auto bg-gray-100 md:bg-transparent p-6 md:p-0 justify-evenly"
+  <div :class="darkmode ? 'dark' : ''">
+    <div class="h-screen bg-grey-100 flex flex-col dark:bg-gray-800">
+      <header
+        class="flex flex-wrap flex-row rounded-xl justify-between items-center md:space-x-4 bg-gradient-to-r from-green-800 to-green-600 py-1 px-4 relative mx-5 my-5"
       >
-        <dark-mode-switcher />
-        <router-link class="text-green-600 hover:underline" to="/">
-          Home
-        </router-link>
-        <router-link class="text-green-600 hover:underline" to="/about">
-          About
-        </router-link>
-      </nav>
-    </header>
-    <router-view class="mb-5" />
+        <a href="#" class="block">
+          <span class="sr-only">themes.dev</span>
+          <img
+            class="h-8"
+            src="./assets/logo.png"
+            alt="Acestree Logo"
+            title="Themes.dev Logo"
+          />
+        </a>
+        <nav
+          class="flex flex-row space-x-6 font-semibold w-auto bg-transparent p-0 "
+        >
+          <router-link class="nav-link" to="/">
+            Home
+          </router-link>
+          <router-link class="nav-link" to="/about">
+            About
+          </router-link>
+          <router-link class="nav-link" to="/settings">
+            Settings
+          </router-link>
+          <dark-mode-switcher />
+        </nav>
+      </header>
+      <router-view class="mb-5" />
+    </div>
   </div>
 </template>
 <script>
@@ -48,24 +50,7 @@ export default {
 }
 </script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.nav-link {
+  @apply text-gray-100 hover:underline m-auto;
 }
 </style>

@@ -6,6 +6,6 @@ export default {
     // cb(root)
     fetch(`http://localhost:9000/api/tree/${id}`)
       .then(response => response.json())
-      .then(data => cb(data.tree));
-  }
-};
+      .then(data => cb(data.tree))
+  },
+}

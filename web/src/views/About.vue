@@ -1,5 +1,5 @@
 <template>
-  <force-directed-tree />
+  <force-directed-tree class="h-full" />
 </template>
 <script>
 // @ is an alias to /src

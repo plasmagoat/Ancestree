@@ -284,6 +284,9 @@
                 },
                 "parent": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         }

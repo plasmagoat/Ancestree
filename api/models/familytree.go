@@ -28,6 +28,7 @@ func (p FamilyTree) GetForID(id string, depth int) (*FamilyTree, error) {
 				nodes as nodes,
 				[rel in relationships | rel {.*, type: type(rel),
 					child: startNode(rel).id, 
+					type: endNode(rel).gender,
 					parent: endNode(rel).id}] as rels
 			RETURN nodes, rels`,
 			map[string]interface{}{
