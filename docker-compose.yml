@@ -28,7 +28,12 @@ services:
       - "db"
     networks:
       - neo4j_go_net
-
+  web:
+    container_name: "ancestree-web"
+    build: "./web"
+    ports: 
+      - "8080:8080"
+      
 networks:
   neo4j_go_net:
     driver: bridge

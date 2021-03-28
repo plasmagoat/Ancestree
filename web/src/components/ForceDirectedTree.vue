@@ -40,10 +40,7 @@ export default {
       })
     })
     const getGraph = id => store.dispatch('graph/getGraph', id)
-    const doSomething = () => {
-      console.log()
-      console.log()
-    }
+    const doSomething = () => {}
     const layout = { height: 600, width: 1000 }
 
     const options = {
