@@ -6,8 +6,9 @@
       :node-list="nodelist"
       :link-list="linklist"
       node-text-key="fullname"
+      link-text-key="type"
       :svg-size="svgSize"
-      :highlight-nodes="[selectedNode.id]"
+      :highlight-nodes="selectedNode ? [selectedNode.id] : []"
       v-on:clickNode="onSelect"
     />
     <profile
@@ -75,6 +76,7 @@ export default {
     const toggleMenu = () => {
       open.value = !open.value
     }
+
     return {
       open,
       nodelist,

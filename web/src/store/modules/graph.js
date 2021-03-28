@@ -5,6 +5,7 @@ const state = () => ({
   nodes: [],
   edges: [],
   selectedNode: null,
+  originNode: null,
 })
 
 // getters
@@ -20,6 +21,12 @@ const actions = {
     tree.getGraph(id, graph => {
       commit('setGraph', graph)
       commit('setSelectedNode', id)
+      commit('setOriginNode', id)
+    })
+  },
+  refreshGraph({ commit, state }) {
+    tree.getGraph(state.originNode, graph => {
+      commit('setGraph', graph)
     })
   },
 }
@@ -32,6 +39,9 @@ const mutations = {
   },
   setSelectedNode(state, id) {
     state.selectedNode = id
+  },
+  setOriginNode(state, id) {
+    state.originNode = id
   },
 }
 

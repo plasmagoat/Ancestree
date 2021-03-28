@@ -21,10 +21,23 @@
         <!-- links and link-text 注：先绘制边 -->
         <g>
           <g :key="link.index" v-for="link in links">
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="15"
+                markerHeight="7"
+                refX="0"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 15 3.5, 0 7" />
+              </marker>
+            </defs>
             <line
               :class="`${link[linkTypeKey]} ${link.selected} link element`"
               :stroke="theme.linkStroke"
               :stroke-width="linkWidth"
+              marker-start="url(#arrowhead)"
             />
             <!-- dx dy 文字左下角坐标 -->
             <text

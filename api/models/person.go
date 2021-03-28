@@ -130,6 +130,46 @@ func (p Person) Create() (*Person, error) {
 	return result.(*Person), nil
 }
 
+func (p Person) Update() (*Person, error) {
+	personData, err := p.getData()
+	if err != nil {
+		return nil, err
+	}
+
+	session := db.GetNewSession()
+	defer session.Close()
+
+	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+		records, err := tx.Run(
+			`MATCH (p:Person { id: $id })
+			SET p += $personData
+			RETURN p
+			`,
+			map[string]interface{}{
+				"id":         p.ID,
+				"personData": personData,
+			},
+		)
+		// In face of driver native errors, make sure to return them directly.
+		// Depending on the error, the driver may try to execute the function again.
+		if err != nil {
+			return nil, err
+		}
+		record, err := records.Single()
+		if err != nil {
+			return nil, err
+		}
+
+		person, err := createFromNode(record.Values[0].(dbtype.Node))
+		return &person, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return result.(*Person), nil
+}
+
 //CreateParent creates a Person node with a parent relation to given ID and returns the new parent Person
 func (p *Person) CreateParent(childID string) (*Person, error) {
 	personData, err := p.getData()

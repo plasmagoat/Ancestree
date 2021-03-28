@@ -1,6 +1,7 @@
 <template>
   <button
     class="btn bg-green-700 hover:bg-green-600 focus:ring-green-600 font-bold text-gray-100 shadow-lg"
+    :type="type"
   >
     {{ text }}
   </button>
@@ -9,6 +10,7 @@
 export default {
   props: {
     text: String,
+    type: String,
   },
   setup() {},
 }

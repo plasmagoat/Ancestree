@@ -63,6 +63,32 @@ func (p PersonController) Create(c *gin.Context) {
 	return
 }
 
+// Update godoc
+// @Summary Update Person
+// @Description Updates a Person
+// @Tags person
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Person ID"
+// @Param person body models.Person true "Person"
+// @Success 200 {object} models.Person
+// @Router /person/{id} [put]
+func (p PersonController) Update(c *gin.Context) {
+	var person models.Person
+	err := c.ShouldBindJSON(&person)
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
+	}
+	person.ID = c.Param("id")
+	gg, err := person.Update()
+	if err != nil {
+		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request", "body": gg})
+	c.Abort()
+	return
+}
+
 // CreateParent godoc
 // @Summary Create Parent link
 // @Description Creates a Person
@@ -125,10 +151,6 @@ func (p PersonController) CreateChild(c *gin.Context) {
 // @Router /person/link/{childId}/{parentId} [post]
 func (p PersonController) CreateLink(c *gin.Context) {
 	var newPerson models.Person
-	err := c.ShouldBindJSON(&newPerson)
-	if err != nil {
-		httputil.NewError(c, http.StatusInternalServerError, err, "Invalid body")
-	}
 	gg, err := newPerson.CreateLink(c.Param("childId"), c.Param("parentId"))
 	if err != nil {
 		httputil.NewError(c, http.StatusInternalServerError, err, "Shit.")

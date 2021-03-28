@@ -21,7 +21,7 @@ type TreeController struct{}
 // @Router /tree/{id} [get]
 func (p TreeController) GetFamiliyTree(c *gin.Context) {
 	if c.Param("id") != "" {
-		tree, err := familtyTreeModel.GetForID(c.Param("id"), 4)
+		tree, err := familtyTreeModel.GetForID(c.Param("id"), 6)
 		if err != nil {
 			httputil.NewError(c, http.StatusInternalServerError, err, "Error while getting tree")
 			c.Abort()
