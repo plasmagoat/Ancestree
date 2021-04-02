@@ -2,7 +2,7 @@ db:
   url: "bolt://db:7687"
   user: "neo4j"
   pass: "s3cr3t"
-server:
+server: 
   port: ":9000"
 web:
-  origin: "https://ancestree.procopius.localhost"
+  origin: "https://ancestree.procopius.dk"

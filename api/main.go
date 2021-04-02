@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	environment := flag.String("e", "devdocker", "")
+	environment := flag.String("e", "docker", "")
 	flag.Usage = func() {
 		fmt.Println("Usage: server -e {mode}")
 		os.Exit(1)

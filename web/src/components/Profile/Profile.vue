@@ -7,7 +7,7 @@
       <div
         class="relative px-4 py-10 bg-gray-100 dark:bg-gray-700 shadow-lg rounded-3xl border-green-800 border-2"
       >
-        <h1 class="text-lg font-bold">
+        <h1>
           {{ node.fullname }}
         </h1>
         <h2>
@@ -42,32 +42,6 @@
         @click="openEditor"
       />
     </div>
-    <div v-show="editorOpen && editMode != 'edit'" class="relative p-3 mt-5">
-      <div
-        class="absolute m-2 inset-0 bg-gradient-to-r from-green-800 to-green-600 shadow-lg transform skew-y-0 -rotate-3 rounded-3xl"
-      />
-      <div
-        class="relative p-4 bg-gray-100 dark:bg-gray-700 shadow-lg rounded-3xl border-green-800 border-2"
-      >
-        <div class="grid grid-cols-1 gap-6">
-          <person-selector v-model:selected="linkingPerson" />
-          <div class="block">
-            <standard-button
-              submitmode="submit"
-              class="flex-1"
-              text="Submit"
-              @click="closeLinker"
-            />
-            <standard-button
-              submitmode="cancel"
-              class="flex-1 mx-2"
-              text="Cancel"
-              @click="resetEditor"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
     <div v-show="editorOpen" class="relative p-3 mt-5">
       <div
         class="absolute m-2 inset-0 bg-gradient-to-r from-green-800 to-green-600 shadow-lg transform skew-y-0 -rotate-3 rounded-3xl"
@@ -75,7 +49,23 @@
       <div
         class="relative p-4 bg-gray-100 dark:bg-gray-700 shadow-lg rounded-3xl border-green-800 border-2"
       >
+        <div v-show="editMode != 'edit'" class="grid grid-cols-1 gap-6">
+          <person-selector
+            text="Link Person"
+            v-model:selected="linkingPerson"
+          />
+          <div class="block">
+            <standard-button
+              submitmode="submit"
+              class="flex-1"
+              text="Link"
+              @click="closeLinker"
+            />
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 gap-6">
+          <hr class="dashed" />
           <label class="block">
             <span class="text-gray-700">Full name</span>
             <input

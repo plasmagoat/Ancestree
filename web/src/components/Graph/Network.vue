@@ -12,7 +12,8 @@
       :width="svgSize.width"
       :height="svgSize.height"
       :viewBox="viewBox"
-      :style="{ 'background-color': theme.bgcolor }"
+      class="bg-transparent"
+      overflow="visible"
       @click="clickEle"
       @mouseover.prevent="svgMouseover"
       @mouseout="svgMouseout"
@@ -20,24 +21,59 @@
       <g id="container">
         <!-- links and link-text 注：先绘制边 -->
         <g>
-          <g :key="link.index" v-for="link in links">
-            <defs>
-              <marker
-                id="arrowhead"
-                markerWidth="15"
-                markerHeight="7"
-                refX="0"
-                refY="3.5"
-                orient="auto"
-              >
-                <polygon points="0 0, 15 3.5, 0 7" />
-              </marker>
-            </defs>
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="15"
+              markerHeight="7"
+              refX="0"
+              refY="3.5"
+              orient="auto"
+            >
+              <polygon points="0 0, 15 3.5, 0 7" />
+            </marker>
+            <marker
+              id="arrow-head"
+              viewBox="0 -5 10 10"
+              refX="30"
+              refY="-1"
+              markerWidth="4"
+              markerHeight="4"
+              orient="auto"
+              transform="rotate(-20 0 0)"
+            >
+              <path d="M0,-5L10,0L0,5" />
+            </marker>
+          </defs>
+          <g
+            :key="link.index"
+            v-for="link in links"
+            fill="none"
+            :stroke-width="linkWidth"
+          >
             <line
-              :class="`${link[linkTypeKey]} ${link.selected} link element`"
-              :stroke="theme.linkStroke"
+              v-if="!linkArc"
+              :class="
+                `${link[linkTypeKey]} ${link.selected} link element stroke-current fill`
+              "
               :stroke-width="linkWidth"
               marker-start="url(#arrowhead)"
+            />
+            <path
+              v-if="linkArc"
+              :class="
+                `${link[linkTypeKey]} ${link.selected} linkarc element stroke-current fill`
+              "
+              :d="
+                `M${link.source.x},${link.source.y} A${Math.hypot(
+                  link.target.x - link.source.x,
+                  link.target.y - link.source.y,
+                )},${Math.hypot(
+                  link.target.x - link.source.x,
+                  link.target.y - link.source.y,
+                )} 0 0,1 ${link.target.x},${link.target.y}`
+              "
+              marker-end="url(#arrow-head)"
             />
             <!-- dx dy 文字左下角坐标 -->
             <text
@@ -75,7 +111,7 @@
               v-show="node.showText"
               :dx="nodeSize + 5"
               dy="0"
-              class="node-text"
+              class="node-text fill-current dark:text-gray-200"
               :fill="theme.textFill"
               :font-size="nodeTextFontSize"
             >
@@ -139,6 +175,10 @@ export default {
     linkWidth: {
       type: Number,
       default: 2,
+    },
+    linkArc: {
+      type: Boolean,
+      default: false,
     },
     showLinkText: {
       type: Boolean,
@@ -236,17 +276,13 @@ export default {
     theme() {
       if (this.svgTheme === 'light') {
         return {
-          bgcolor: 'transparent',
           nodeStroke: 'white',
-          linkStroke: 'lightgray',
           textFill: 'black',
         }
       } else {
         // dark
         return {
-          bgcolor: 'black',
           nodeStroke: 'white',
-          linkStroke: 'rgba(200,200,200)',
           textFill: 'white',
         }
       }
@@ -297,6 +333,7 @@ export default {
     initData() {
       this.force = d3
         .forceSimulation(this.nodes)
+        .alphaDecay(0.001)
         .force(
           'link',
           d3
@@ -318,6 +355,9 @@ export default {
           .attr('y1', d => d.source.y)
           .attr('x2', d => d.target.x)
           .attr('y2', d => d.target.y)
+        d3.selectAll('.linkarc')
+          .data(this.links)
+          .attr('d', this.calcLinkArc)
         d3.selectAll('.node')
           .data(this.nodes)
           .attr('cx', d => d.x)
@@ -480,6 +520,10 @@ export default {
         .on('drag', dragged)
         .on('end', dragended)
     },
+    calcLinkArc(d) {
+      const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y)
+      return `M${d.source.x},${d.source.y} A${r},${r} 0 0,1 ${d.target.x},${d.target.y}`
+    },
   },
 }
 </script>
@@ -489,6 +533,7 @@ svg {
 }
 text {
   pointer-events: none;
+  /* @apply dark:text-gray-100; */
 }
 .element {
   transition: opacity 0.5s ease;

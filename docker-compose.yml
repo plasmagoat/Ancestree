@@ -14,7 +14,7 @@ services:
       - NEO4J_AUTH=neo4j/s3cr3t
       - NEO4JLABS_PLUGINS=["apoc"]
     networks:
-      - neo4j_go_net
+      - ancestree_net
     command: neo4j
   api:
     container_name: "ancestree-api"
@@ -27,13 +27,80 @@ services:
     depends_on:
       - "db"
     networks:
-      - neo4j_go_net
+      - ancestree_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ancestree-api.rule=Host(`ancestree-api.procopius.dk`)"
+      - "traefik.http.routers.ancestree-api.entrypoints=websecure"
+      - "traefik.http.routers.ancestree-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.ancestree-api.tls=true"
+      # use compression
+      - "traefik.http.routers.ancestree-api.middlewares=test-compress"
+      - "traefik.http.middlewares.test-compress.compress=true"
   web:
     container_name: "ancestree-web"
     build: "./web"
-    ports: 
+    ports:
       - "8080:8080"
-      
+    networks:
+      - ancestree_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ancestree-web.rule=Host(`ancestree.procopius.dk`)"
+      - "traefik.http.routers.ancestree-web.entrypoints=websecure"
+      - "traefik.http.routers.ancestree-web.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.ancestree-web.tls=true"
+      # use compression
+      - "traefik.http.routers.ancestree-web.middlewares=test-compress"
+      - "traefik.http.middlewares.test-compress.compress=true"
+  reverse-proxy:
+    container_name: "reverse-proxy"
+    # The official v2 Traefik docker image
+    image: traefik:v2.4
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      # - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      # - "--api.dashboard=true"
+
+      - "--providers.file.directory=/traefik/config/"
+      - "--providers.file.watch=true"
+
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      # redirect port 80 -> 443
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=david.mikael@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/traefik/letsencrypt/acme.json"
+
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The HTTPS port
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8888:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./traefik:/traefik"
+    networks:
+      - ancestree_net
+  # whoami:
+  #     # A container that exposes an API to show its IP address
+  #     image: containous/whoami
+  #     labels:
+  #       - traefik.http.routers.whoami.rule=Host('ancestree.procopious.localhost') #sets the rule for the router
+  #       - traefik.http.routers.whoami.tls=true #sets the service to use TLS
+  #       - traefik.http.routers.whoami.tls.certresolver=letsEncrypt #references our certificatesResolvers in traefik.yml
+  #       - traefik.http.routers.whoami.tls.domains[0].main=procopius.dk #optionally restrict domain
+
 networks:
-  neo4j_go_net:
+  ancestree_net:
     driver: bridge

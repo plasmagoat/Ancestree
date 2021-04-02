@@ -2,7 +2,7 @@
   <div class="flex h-full">
     <network
       ref="network"
-      class="bg-transparent mx-5 rounded-xl sm:rounded-xl flex-grow h-full"
+      class="bg-transparent rounded-2xl mx-5 flex-grow h-full z-0"
       :node-list="nodelist"
       :link-list="linklist"
       node-text-key="fullname"
@@ -13,7 +13,7 @@
     />
     <profile
       v-if="selectedNode"
-      class="mx-5 flex-grow-0 w-1/3"
+      class="mx-5 flex-grow-0 w-1/3 z-10"
       :node="selectedNode"
     />
   </div>

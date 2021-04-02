@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:9000/api/person'
+const BASE_URL = 'https://ancestree-api.procopius.dk/api/person'
 
 export default {
   createPerson(person, cb) {

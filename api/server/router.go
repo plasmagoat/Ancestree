@@ -1,6 +1,7 @@
 package server
 
 import (
+	"api/config"
 	"api/controllers"
 	"api/docs"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 )
 
 func NewRouter() *gin.Engine {
+	config := config.GetConfig()
 	InitSwaggerInfo()
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -24,13 +26,13 @@ func NewRouter() *gin.Engine {
 	// - Credentials share
 	// - Preflight requests cached for 12 hours
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:8080"},
+		AllowOrigins:     []string{config.GetString("web.origin")},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://github.com"
+			return origin == "http://localhost:8080"
 		},
 		MaxAge: 12 * time.Hour,
 	}))
