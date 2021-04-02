@@ -37,11 +37,11 @@ export default {
     const store = useStore()
 
     // Current User
-    const id = ref('')
+    const currentUser = computed(() => store.state.auth.user)
 
     // This is temporary...
-    id.value = 'bdcaa46e-554c-4c6e-addf-45b010f33f1b'
-    store.dispatch('graph/getGraph', id.value)
+    // id.value = 'bdcaa46e-554c-4c6e-addf-45b010f33f1b'
+    store.dispatch('graph/getGraph', currentUser.value.id)
 
     // Open/Close menu.. doesn't go here..
     const open = ref(true)

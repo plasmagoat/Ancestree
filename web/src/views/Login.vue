@@ -14,6 +14,7 @@
           <h2>
             something
           </h2>
+          <input type="text" v-model="user.id" />
           <standard-button text="login" @click="handleLogin" />
         </div>
       </div>
@@ -34,13 +35,15 @@ export default {
   setup() {
     const store = useStore()
     const router = useRouter()
-    const user = ref(new User('bdcaa46e-554c-4c6e-addf-45b010f33f1b', ''))
+    const user = ref(new User('0adcef56-c7f3-4f1a-a585-1c67a2282e88', ''))
+    //const user = ref(new User('bdcaa46e-554c-4c6e-addf-45b010f33f1b', ''))
     const handleLogin = () => {
       store.dispatch('auth/login', user.value)
       router.push({ name: 'Home' })
     }
     return {
       handleLogin,
+      user,
     }
   },
 }
